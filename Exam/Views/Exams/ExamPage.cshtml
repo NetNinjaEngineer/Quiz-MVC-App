@@ -1,0 +1,24 @@
+﻿@model ExamViewModel
+
+<h2>@Model.ExamType</h2>
+
+<form asp-action="SubmitExam" method="post">
+    <input type="hidden" name="ExamId" value="@Model.ExamId" />
+
+    @for (int i = 0; i < Model.Questions.Count; i++)
+    {
+        <div>
+            <h4>@Model.Questions[i].Body  <span>@Model.Questions[i].Mark</span> mark</h4>
+            <input type="hidden" asp-for="Questions[i].QuestionId" />
+            @foreach (var answer in Model.Questions[i].Answers)
+            {
+                <div>
+                    <input type="radio" asp-for="Questions[i].SelectedAnswerId" value="@answer.AnswerId" />
+                    <label>@answer.Text</label>
+                </div>
+            }
+        </div>
+    }
+
+    <button type="submit">Submit Exam</button>
+</form>

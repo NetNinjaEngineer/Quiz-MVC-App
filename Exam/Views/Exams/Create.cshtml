@@ -1,0 +1,58 @@
+﻿@model CreateExamViewModel
+
+@{
+    ViewData["Title"] = "Create Exam";
+    var subjects = ViewBag.Subjects as List<SubjectViewModel>;
+    var subjectItems = new SelectList(subjects, "Id", "SubjectName");
+}
+
+
+<h2>Create Exam</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="SubjectId" class="control-label">Subject</label>
+        <select asp-for="SubjectId" asp-items="@subjectItems" class="form-control">
+            <option value="@null">-------------- Select subject --------------</option>
+            @if(subjects is not null)
+            {
+                @foreach (var subject in subjects)
+                {
+                    <option value="@subject.Id">@subject.SubjectName</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Duration" class="control-label"></label>
+        <input asp-for="Duration" class="form-control" type="time" />
+        <span asp-validation-for="Duration" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NumberOfQuestions" class="control-label"></label>
+        <input asp-for="NumberOfQuestions" class="form-control" type="number" />
+        <span asp-validation-for="NumberOfQuestions" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ExamType" class="control-label"></label>
+        <select asp-for="ExamType" class="form-control">
+            <option value="">Select Exam Type</option>
+            <option value="Final">Final Exam</option>
+            <option value="Practical">Practical Exam</option>
+        </select>
+        <span asp-validation-for="ExamType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

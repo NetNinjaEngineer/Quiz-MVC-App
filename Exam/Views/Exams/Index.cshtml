@@ -1,0 +1,73 @@
+﻿@model IEnumerable<ExamViewModel>
+
+@{
+    ViewData["Title"] = "All Exams";
+    var limitMessage = TempData["MaxLimit"] as string;
+}
+
+@if(limitMessage is not null)
+{
+    <span id="limitMsg" class="alert alert-warning">@limitMessage</span>
+}
+
+<br />
+<h2>All Exams</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Exam ID</th>
+            <th>Exam Type</th>
+            <th>Duration</th>
+            <th>Number of Questions</th>
+            <th>Subject</th>
+            <th>Questions</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var exam in Model)
+        {
+            <tr>
+                <td>@exam.ExamId</td>
+                <td>@exam.ExamType</td>
+                <td>@exam.Duration</td>
+                <td>@exam.NumberOfQuestions</td>
+                <td>@exam.Subject</td>
+                <td>
+                    <ul>
+                        @foreach (var question in exam.Questions)
+                        {
+                            <li>
+                                <strong>Question:</strong> @question.Body
+                                <ul>
+                                    @foreach (var answer in question.Answers)
+                                    {
+                                        <li>
+                                            <strong>Answer:</strong> @answer.Text
+                                            <span class="badge @(answer.IsCorrect ? "bg-success" : "bg-danger")">
+                                                @(answer.IsCorrect ? "Correct" : "Incorrect")
+                                            </span>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    <a asp-action="StartExam" asp-route-examId="@exam.ExamId" class="btn btn-outline-info">Start Now!</a>|
+                    <a asp-action="AddQuestionToExam" asp-route-examId="@exam.ExamId" class="btn btn-outline-success">Add Another Question</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts {
+    <script>
+        const limitMessage = document.getElementById("limitMsg");
+        setTimeout(() => {
+            limitMessage.style.display = 'none'
+        }, 3000)
+    </script>
+}
